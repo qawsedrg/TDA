@@ -1,5 +1,5 @@
 import numpy as np
-
+import gudhi
 
 def neighbor_vertice(G, v):
     result = set()
@@ -45,20 +45,41 @@ def Optimize(G):
                 if is_dominated(filtered(G, T[i]), e):
                     if i == len(T) - 1:
                         G[e[0], e[1]] = 0
+                        G[e[1], e[0]] = 0
                     else:
                         G[e[0], e[1]] = T[i + 1]
+                        G[e[1], e[0]] = T[i + 1]
     return G
 
 
 if __name__ == "__main__":
+    '''
     G = np.eye(10)
     G = -(G - 1)
+
+    G = np.eye(4)
+    G = -(G - 1)
+    G[0,2]=np.sqrt(2)
+    G[2, 0] = np.sqrt(2)
+    G[3, 1] = np.sqrt(2)
+    G[1, 3]=np.sqrt(2)
+    '''
+    points = [[1, 1], [7, 0], [4, 6], [9, 6], [0, 14], [2, 19], [9, 17]]
+    rips_complex = gudhi.RipsComplex(points=points)
+    simplex_tree = rips_complex.create_simplex_tree(max_dimension=1)
+    G = np.zeros((len(points), len(points)))
+    for filtered_value in simplex_tree.get_filtration():
+        if len(filtered_value[0]) == 1:
+            continue
+        G[filtered_value[0][0], filtered_value[0][1]] = filtered_value[1]
+        G[filtered_value[0][1], filtered_value[0][0]] = filtered_value[1]
+
     with open("graph", "w") as f:
         for r in range(G.shape[0]):
             for c in range(r + 1, G.shape[1]):
                 if G[r, c] != 0:
                     f.writelines(["{:} {:} {:}\n".format(r, c, G[r, c])])
-    """
+    '''
     with open("graph", "r") as f:
         lines = f.readlines()
     tmp = np.array([[float(i) for i in line.strip('\n').split(" ")] for line in lines])
@@ -67,7 +88,7 @@ if __name__ == "__main__":
     for i in range(tmp.shape[0]):
         G[int(tmp[i, 0]), int(tmp[i, 1])] = tmp[i, 2]
         G[int(tmp[i, 1]), int(tmp[i, 0])] = tmp[i, 2]
-    """
+    '''
     print(G)
     M = Optimize(G)
     print(M)
