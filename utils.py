@@ -198,7 +198,6 @@ def show(d: Dict, points: List[Point]):
             continue
         d_reverse[np.sqrt(v)].append(k)
     dis = sorted(d_reverse.keys())
-    plt.subplots_adjust(bottom=0.3)
 
     fig, ax = plt.subplots()
 
