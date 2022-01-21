@@ -41,7 +41,7 @@ class Point():
         x12 = (self.x - p.x) ** 2
         y12 = (self.y - p.y) ** 2
         euclidean_distance = np.sqrt(x12 + y12)
-        if self.z is not None:
+        if self.z is not None and p.z is not None:
             z12 = (self.z - p.z) ** 2
             euclidean_distance = np.sqrt(x12 + y12 + z12)
 
@@ -191,6 +191,12 @@ def get_filtration_3d(P: List[Point], C: List[int]):
         return (Circle(*getSphere_4points(P[C[0]], P[C[1]], P[C[2]], P[C[3]])).radius) ** 2
 
 
+def contains(tup, outs):
+    for out in outs:
+        if set(out).issubset(set(tup)):
+            return True
+    return False
+
 def show(d: Dict, points: List[Point]):
     d_reverse = defaultdict(list)
     for (k, v) in d.items():
@@ -207,7 +213,7 @@ def show(d: Dict, points: List[Point]):
     for point in points:
         ax.scatter(point.x, point.y, c='b', s=40)
     axfreq = plt.axes([0.25, 0.1, 0.65, 0.03], facecolor=axcolor)
-    sfreq = Slider(axfreq, 'Freq', 0.0, max(dis) + 1, valfmt='% .2f', valinit=0, valstep=0.001)
+    sfreq = Slider(axfreq, 'Filtration', 0.0, max(dis) + 1, valfmt='% .2f', valinit=0, valstep=0.001)
 
     def update(val):
         freq = sfreq.val
@@ -236,59 +242,3 @@ def show(d: Dict, points: List[Point]):
     sfreq.set_val(0)
 
     plt.show()
-
-
-def compute_diagram(action, file_complex):
-    st = gudhi.SimplexTree()
-    for line in file_complex:
-        fields = line.split()
-        st.insert([int(i) for i in fields])
-    st.compute_persistence()
-    for i, n in enumerate(st.betti_numbers()):
-        if n != 0:
-            print("dimension", i, ":", n)
-
-
-def plot3d(action, file_complex, file_coordinates):
-    points = np.loadtxt(file_coordinates)
-    simplexes = [[], [], []]
-    for line in file_complex:
-        fields = line.split()
-        k = len(fields) - 1
-        if k <= 2:
-            simplexes[k].append([int(i) for i in fields])
-
-    from mpl_toolkits.mplot3d.art3d import Line3DCollection
-    import matplotlib.pyplot as plt
-    fig = plt.figure()
-    ax = fig.gca(projection='3d')
-    # Plot triangles
-    ax.plot_trisurf(points[:, 0], points[:, 1], points[:, 2], triangles=simplexes[2])
-    # Plot points
-    points2 = points[np.array(simplexes[0]).reshape(-1)]
-    ax.scatter3D(points2[:, 0], points2[:, 1], points2[:, 2])
-    # Plot edges
-    ax.add_collection3d(Line3DCollection(segments=[points[e] for e in simplexes[1]]))
-    # plt.savefig('myplot.pdf')
-    plt.show()
-
-
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description='Process a simplicial complex.')
-    parser.add_argument('--complex', default="./cplx.txt", type=argparse.FileType('r'))
-    parser.add_argument('--coordinates', default="./coord.txt", type=argparse.FileType('r'))
-    parser.add_argument('--action', default="plot3d", choices=['betti', 'plot3d'])
-    args = parser.parse_args()
-    if args.action in ['betti']:
-        if not args.complex:
-            print("missing complex")
-            sys.exit()
-        compute_diagram(args.action, args.complex)
-    elif args.action in ['plot3d']:
-        if not args.complex:
-            print("missing complex")
-            sys.exit()
-        if not args.coordinates:
-            print("missing coordinates")
-            sys.exit()
-        plot3d(args.action, args.complex, args.coordinates)

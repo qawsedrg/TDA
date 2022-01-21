@@ -53,16 +53,18 @@ def Optimize(G):
 
 
 if __name__ == "__main__":
-    '''
+
     G = np.eye(10)
     G = -(G - 1)
 
+    '''
     G = np.eye(4)
     G = -(G - 1)
     G[0,2]=np.sqrt(2)
     G[2, 0] = np.sqrt(2)
     G[3, 1] = np.sqrt(2)
     G[1, 3]=np.sqrt(2)
+    '''
     '''
     points = [[1, 1], [7, 0], [4, 6], [9, 6], [0, 14], [2, 19], [9, 17]]
     rips_complex = gudhi.RipsComplex(points=points)
@@ -73,12 +75,14 @@ if __name__ == "__main__":
             continue
         G[filtered_value[0][0], filtered_value[0][1]] = filtered_value[1]
         G[filtered_value[0][1], filtered_value[0][0]] = filtered_value[1]
+    '''
 
     with open("graph", "w") as f:
         for r in range(G.shape[0]):
             for c in range(r + 1, G.shape[1]):
                 if G[r, c] != 0:
                     f.writelines(["{:} {:} {:}\n".format(r, c, G[r, c])])
+
     '''
     with open("graph", "r") as f:
         lines = f.readlines()
