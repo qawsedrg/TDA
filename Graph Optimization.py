@@ -1,7 +1,9 @@
-import numpy as np
-import gudhi
+from typing import Tuple
 
-def neighbor_vertice(G, v):
+import numpy as np
+
+
+def neighbor_vertice(G: np.ndarray, v: int):
     result = set()
     result.add(v)
     for i in range(G.shape[1]):
@@ -10,22 +12,22 @@ def neighbor_vertice(G, v):
     return result
 
 
-def neighbor_edge(G, e):
+def neighbor_edge(G: np.ndarray, e: Tuple[int]):
     return neighbor_vertice(G, e[0]).intersection(neighbor_vertice(G, e[1]))
 
 
-def is_dominated_vertice(G, e, v):
+def is_dominated_vertice(G: np.ndarray, e: Tuple[int], v: int):
     return neighbor_edge(G, e).issubset(neighbor_vertice(G, v)) and not (v in e)
 
 
-def is_dominated(G, e):
+def is_dominated(G: np.ndarray, e: Tuple[int]):
     for v in range(G.shape[1]):
         if is_dominated_vertice(G, e, v):
             return True
     return False
 
 
-def exist_domination(G):
+def exist_domination(G: np.ndarray):
     for i in range(G.shape[0]):
         for j in range(i + 1, G.shape[1]):
             if G[i, j] != 0 and is_dominated(filtered(G, G[i, j]), (i, j)):
@@ -33,11 +35,11 @@ def exist_domination(G):
     return False
 
 
-def filtered(G, t):
+def filtered(G: np.ndarray, t: int):
     return np.where(G <= t, G, 0)
 
 
-def Optimize(G):
+def Optimize(G: np.ndarray):
     while exist_domination(G):
         T = np.unique(np.sort(G.flatten()))[1:]
         for i in range(len(T)):
@@ -60,10 +62,10 @@ if __name__ == "__main__":
     '''
     G = np.eye(4)
     G = -(G - 1)
-    G[0,2]=np.sqrt(2)
+    G[0,2] = np.sqrt(2)
     G[2, 0] = np.sqrt(2)
     G[3, 1] = np.sqrt(2)
-    G[1, 3]=np.sqrt(2)
+    G[1, 3] = np.sqrt(2)
     '''
     '''
     points = [[1, 1], [7, 0], [4, 6], [9, 6], [0, 14], [2, 19], [9, 17]]
@@ -83,7 +85,6 @@ if __name__ == "__main__":
                 if G[r, c] != 0:
                     f.writelines(["{:} {:} {:}\n".format(r, c, G[r, c])])
 
-    '''
     with open("graph", "r") as f:
         lines = f.readlines()
     tmp = np.array([[float(i) for i in line.strip('\n').split(" ")] for line in lines])
@@ -92,7 +93,7 @@ if __name__ == "__main__":
     for i in range(tmp.shape[0]):
         G[int(tmp[i, 0]), int(tmp[i, 1])] = tmp[i, 2]
         G[int(tmp[i, 1]), int(tmp[i, 0])] = tmp[i, 2]
-    '''
+
     print(G)
     M = Optimize(G)
     print(M)

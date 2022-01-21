@@ -70,6 +70,7 @@ def Alpha_3d(P: List[Point]):
                             fil[tup] = fil[C]
     return fil
 
+
 if __name__ == "__main__":
     points = [Point(1, 1), Point(7, 0), Point(4, 6), Point(9, 6), Point(0, 14), Point(2, 19), Point(9, 17)]
     d = Alpha_2d(points)

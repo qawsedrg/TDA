@@ -1,9 +1,6 @@
-import argparse
-import sys
 from collections import defaultdict
-from typing import List, Dict
+from typing import List, Dict, Tuple
 
-import gudhi
 import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.widgets import Slider
@@ -191,11 +188,12 @@ def get_filtration_3d(P: List[Point], C: List[int]):
         return (Circle(*getSphere_4points(P[C[0]], P[C[1]], P[C[2]], P[C[3]])).radius) ** 2
 
 
-def contains(tup, outs):
+def contains(tup: Tuple, outs: List[Tuple]):
     for out in outs:
         if set(out).issubset(set(tup)):
             return True
     return False
+
 
 def show(d: Dict, points: List[Point]):
     d_reverse = defaultdict(list)
