@@ -2,7 +2,7 @@ from copy import deepcopy
 from itertools import combinations
 from typing import List
 
-from task1 import SphereMin, CircleMin
+from SphereMin import SphereMin, CircleMin
 from utils import Point, contains
 
 
@@ -30,7 +30,7 @@ def Cech(P: List[Point], k: int, l: float, dim):
                     print("->[out]")
                 else:
                     print("->[{:.5f}]".format(c.radius))
-                    result[tup] = c.radius ** 2
+                    result[tup] = c.radius
     return result
 
 
@@ -62,7 +62,7 @@ def CechOptimized(P: List[Point], k: int, l: float, dim: int):
                     print("->[out]")
                 else:
                     print("->[{:.5f}]".format(c.radius))
-                    result[tup] = c.radius ** 2
+                    result[tup] = c.radius
     return result
 
 

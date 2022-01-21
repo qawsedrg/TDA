@@ -214,9 +214,9 @@ def get_filtration_2d(P: List[Point], C: List[int]):
     if len(C) == 1:
         return 0
     if len(C) == 2:
-        return (P[C[0]].calculate_distance_to(P[C[1]]) / 2) ** 2
+        return (P[C[0]].calculate_distance_to(P[C[1]]) / 2)
     if len(C) == 3:
-        return Circle(*getcircle_3points(P[C[0]], P[C[1]], P[C[2]])).radius ** 2
+        return Circle(*getcircle_3points(P[C[0]], P[C[1]], P[C[2]])).radius
 
 
 def get_filtration_3d(P: List[Point], C: List[int]):
@@ -230,9 +230,9 @@ def get_filtration_3d(P: List[Point], C: List[int]):
     if len(C) == 2:
         return (P[C[0]].calculate_distance_to(P[C[1]]) / 2) ** 2
     if len(C) == 3:
-        return Circle(*getSphere_3points(P[C[0]], P[C[1]], P[C[2]])).radius ** 2
+        return Circle(*getSphere_3points(P[C[0]], P[C[1]], P[C[2]])).radius
     if len(C) == 4:
-        return Circle(*getSphere_4points(P[C[0]], P[C[1]], P[C[2]], P[C[3]])).radius ** 2
+        return Circle(*getSphere_4points(P[C[0]], P[C[1]], P[C[2]], P[C[3]])).radius
 
 
 def contains(tup: Tuple, outs: List[Tuple]):
@@ -257,7 +257,7 @@ def show(d: Dict, points: List[Point]):
     for (k, v) in d.items():
         if v == 0:
             continue
-        d_reverse[np.sqrt(v)].append(k)
+        d_reverse[v].append(k)
     dis = sorted(d_reverse.keys())
 
     fig, ax = plt.subplots()
