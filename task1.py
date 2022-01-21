@@ -6,6 +6,13 @@ from utils import Point, Circle, draw_circle_points, getcircle_3points, getSpher
 
 
 def SphereMin(P: List[Point], R: List[Point]):
+    '''
+    SphereMin(points, []) returns the minimum bounding sphere of points
+    :param P: Points in the Sphere
+    :param R: Points on the surface of the Sphere
+    :return: Minimum Sphere
+    '''
+    # base case
     if len(P) == 0 or len(R) >= 4:
         if len(R) == 1:
             p = R[0]
@@ -32,6 +39,7 @@ def SphereMin(P: List[Point], R: List[Point]):
             return mb
         else:
             return Circle(Point(0, 0, 0), 0)
+    # Linear Programming
     p = random.choice(P)
     P.remove(p)
     D1 = SphereMin(deepcopy(P), deepcopy(R))
@@ -42,6 +50,12 @@ def SphereMin(P: List[Point], R: List[Point]):
 
 
 def CircleMin(P: List[Point], R: List[Point]):
+    '''
+    CircleMin(points, []) returns the minimum bounding circle of points
+    :param P: Points in the Cirle
+    :param R: Points on the surface of the Circle
+    :return: Minimum Circle
+    '''
     if len(P) == 0 or len(R) >= 4:
         if len(R) == 1:
             p = R[0]
@@ -73,8 +87,8 @@ def CircleMin(P: List[Point], R: List[Point]):
 
 if __name__ == "__main__":
     # points = [Point(5, 0, 1), Point(-1, -3, 4), Point(-1, -4, -3), Point(-1, 4, -3)]
-    # points = [Point(-10, 0,0),Point(10, 0, 0),Point(0, 1, 0)]
-    # points = [Point(-5, 0,0),Point(3, -4, 0),Point(3, 4, 0)]
+    # points = [Point(-10, 0,0), Point(10, 0, 0), Point(0, 1, 0)]
+    # points = [Point(-5, 0,0), Point(3, -4, 0), Point(3, 4, 0)]
     points = [Point(random.randint(-100, 100), random.randint(-100, 100), random.randint(-100, 100)) for _ in
               range(100)]
     c = SphereMin(deepcopy(points), [])

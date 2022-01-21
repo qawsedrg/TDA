@@ -9,6 +9,10 @@ from scipy.linalg import solve
 
 
 class Point():
+    '''
+    A representation of a point in 2D or 3d
+    '''
+
     def __init__(self, *coordinates):
         self.x = coordinates[0]
         self.y = coordinates[1]
@@ -52,6 +56,10 @@ class Point():
 
 
 class Circle():
+    '''
+    A representation of a sphere in all dimensions
+    '''
+
     def __init__(self, centre: Point, radius: float):
         self.centre = centre
         self.radius = radius
@@ -59,11 +67,17 @@ class Circle():
     def __str__(self):
         return self.centre.__str__() + " " + str(self.radius)
 
-    def V(self):
-        return 4 / 3 * np.pi * self.radius ** 3
-
 
 def getSphere_4points(p1: Point, p2: Point, p3: Point, p4: Point):
+    '''
+    return the sphere defined by these points.
+    Donot use on points which are on the same plane
+    :param p1: point
+    :param p2: point
+    :param p3: point
+    :param p4: point
+    :return: Sphere defined by these points
+    '''
     a1 = 2 * (p1.x - p2.x)
     b1 = 2 * (p1.y - p2.y)
     c1 = 2 * (p1.z - p2.z)
@@ -89,6 +103,14 @@ def getSphere_4points(p1: Point, p2: Point, p3: Point, p4: Point):
 
 
 def getSphere_3points(p1: Point, p2: Point, p3: Point):
+    '''
+    return minimum sphere defined by these points.
+    Donot use on points which are on the same line
+    :param p1: point
+    :param p2: point
+    :param p3: point
+    :return: minimum sphere defined by these points
+    '''
     a3 = (p2.y - p1.y) * (p3.z - p1.z) - (p2.z - p1.z) * (p3.y - p1.y)
     b3 = (p2.z - p1.z) * (p3.x - p1.x) - (p2.x - p1.x) * (p3.z - p1.z)
     c3 = (p2.x - p1.x) * (p3.y - p1.y) - (p2.y - p1.y) * (p3.x - p1.x)
@@ -114,6 +136,14 @@ def getSphere_3points(p1: Point, p2: Point, p3: Point):
 
 
 def getcircle_3points(p1: Point, p2: Point, p3: Point):
+    '''
+    return the circle defined by these points.
+    Donot use on points which are on the same line
+    :param p1: point
+    :param p2: point
+    :param p3: point
+    :return: circle defined by these points
+    '''
     a1 = 2 * (p1.x - p2.x)
     b1 = 2 * (p1.y - p2.y)
     d1 = p2.d() - p1.d()
@@ -132,6 +162,10 @@ def getcircle_3points(p1: Point, p2: Point, p3: Point):
 
 
 def draw_circle_points(c: Circle, points: List[Point]):
+    '''
+    draw in a 3D space a circle and some points
+    '''
+
     def drawSphere(c: Circle):
         xCenter = c.centre.x
         yCenter = c.centre.y
@@ -162,6 +196,11 @@ def draw_circle_points(c: Circle, points: List[Point]):
 
 
 def is_Gabriel(P: List[Point], C: Circle):
+    '''
+    :param P:
+    :param C:
+    :return:
+    '''
     for p in P:
         if p.calculate_distance_to(C.centre) < C.radius:
             return False
@@ -189,6 +228,11 @@ def get_filtration_3d(P: List[Point], C: List[int]):
 
 
 def contains(tup: Tuple, outs: List[Tuple]):
+    '''
+    :param tup: a simplexe
+    :param outs: list of simplexes
+    :return: if there is a simplexe in outs which is sous-simplexe of tup
+    '''
     for out in outs:
         if set(out).issubset(set(tup)):
             return True
@@ -196,6 +240,11 @@ def contains(tup: Tuple, outs: List[Tuple]):
 
 
 def show(d: Dict, points: List[Point]):
+    '''
+    show the complexe filtered
+    :param d: simplexes and corresponding filtration value
+    :param points: points
+    '''
     d_reverse = defaultdict(list)
     for (k, v) in d.items():
         if v == 0:
@@ -214,6 +263,7 @@ def show(d: Dict, points: List[Point]):
     sfreq = Slider(axfreq, 'Filtration', 0.0, max(dis) + 1, valfmt='% .2f', valinit=0, valstep=0.001)
 
     def update(val):
+        # recalculate the complexe filtered after changing the slider (sfreq)
         freq = sfreq.val
         ax.clear()
         for point in points:
