@@ -8,10 +8,10 @@ from mpl_toolkits.mplot3d import Axes3D
 from scipy.linalg import solve
 
 
-class Point():
-    '''
+class Point:
+    """
     A representation of a point in 2D or 3d
-    '''
+    """
 
     def __init__(self, *coordinates):
         self.x = coordinates[0]
@@ -28,15 +28,15 @@ class Point():
 
     def __repr__(self):
         if self.z is not None:
-            return ("({:.2f}, {:.2f},{:.2f})".format(self.x, self.y, self.z))
+            return "({:.2f}, {:.2f},{:.2f})".format(self.x, self.y, self.z)
         else:
-            return ("({:.2f}, {:.2f})".format(self.x, self.y))
+            return "({:.2f}, {:.2f})".format(self.x, self.y)
 
     def __str__(self):
         if self.z is not None:
-            return ("({:.2f}, {:.2f},{:.2f})".format(self.x, self.y, self.z))
+            return "({:.2f}, {:.2f},{:.2f})".format(self.x, self.y, self.z)
         else:
-            return ("({:.2f}, {:.2f})".format(self.x, self.y))
+            return "({:.2f}, {:.2f})".format(self.x, self.y)
 
     def calculate_distance_to(self, p):
         x12 = (self.x - p.x) ** 2
@@ -55,10 +55,10 @@ class Point():
             return self.x ** 2 + self.y ** 2
 
 
-class Circle():
-    '''
+class Circle:
+    """
     A representation of a sphere in all dimensions
-    '''
+    """
 
     def __init__(self, centre: Point, radius: float):
         self.centre = centre
@@ -69,7 +69,7 @@ class Circle():
 
 
 def getSphere_4points(p1: Point, p2: Point, p3: Point, p4: Point):
-    '''
+    """
     return the sphere defined by these points.
     Donot use on points which are on the same plane
     :param p1: point
@@ -77,7 +77,7 @@ def getSphere_4points(p1: Point, p2: Point, p3: Point, p4: Point):
     :param p3: point
     :param p4: point
     :return: Sphere defined by these points
-    '''
+    """
     a1 = 2 * (p1.x - p2.x)
     b1 = 2 * (p1.y - p2.y)
     c1 = 2 * (p1.z - p2.z)
@@ -103,14 +103,14 @@ def getSphere_4points(p1: Point, p2: Point, p3: Point, p4: Point):
 
 
 def getSphere_3points(p1: Point, p2: Point, p3: Point):
-    '''
+    """
     return minimum sphere defined by these points.
     Donot use on points which are on the same line
     :param p1: point
     :param p2: point
     :param p3: point
     :return: minimum sphere defined by these points
-    '''
+    """
     a3 = (p2.y - p1.y) * (p3.z - p1.z) - (p2.z - p1.z) * (p3.y - p1.y)
     b3 = (p2.z - p1.z) * (p3.x - p1.x) - (p2.x - p1.x) * (p3.z - p1.z)
     c3 = (p2.x - p1.x) * (p3.y - p1.y) - (p2.y - p1.y) * (p3.x - p1.x)
@@ -136,14 +136,14 @@ def getSphere_3points(p1: Point, p2: Point, p3: Point):
 
 
 def getcircle_3points(p1: Point, p2: Point, p3: Point):
-    '''
+    """
     return the circle defined by these points.
     Donot use on points which are on the same line
     :param p1: point
     :param p2: point
     :param p3: point
     :return: circle defined by these points
-    '''
+    """
     a1 = 2 * (p1.x - p2.x)
     b1 = 2 * (p1.y - p2.y)
     d1 = p2.d() - p1.d()
@@ -162,9 +162,9 @@ def getcircle_3points(p1: Point, p2: Point, p3: Point):
 
 
 def draw_circle_points(c: Circle, points: List[Point]):
-    '''
+    """
     draw in a 3D space a circle and some points
-    '''
+    """
 
     def drawSphere(c: Circle):
         xCenter = c.centre.x
@@ -196,11 +196,9 @@ def draw_circle_points(c: Circle, points: List[Point]):
 
 
 def is_Gabriel(P: List[Point], C: Circle):
-    '''
-    :param P:
-    :param C:
-    :return:
-    '''
+    """
+    return True id C is Gabriel
+    """
     for p in P:
         if p.calculate_distance_to(C.centre) < C.radius:
             return False
@@ -208,6 +206,11 @@ def is_Gabriel(P: List[Point], C: Circle):
 
 
 def get_filtration_2d(P: List[Point], C: List[int]):
+    """
+    :param P: points
+    :param C: indexes of points
+    :return: squared radius of the minimum bounding circle
+    """
     if len(C) == 1:
         return 0
     if len(C) == 2:
@@ -217,22 +220,27 @@ def get_filtration_2d(P: List[Point], C: List[int]):
 
 
 def get_filtration_3d(P: List[Point], C: List[int]):
+    """
+    :param P: points
+    :param C: indexes of points
+    :return: squared radius of the minimum bounding sphere
+    """
     if len(C) == 1:
         return 0
     if len(C) == 2:
         return (P[C[0]].calculate_distance_to(P[C[1]]) / 2) ** 2
     if len(C) == 3:
-        return (Circle(*getSphere_3points(P[C[0]], P[C[1]], P[C[2]])).radius) ** 2
+        return Circle(*getSphere_3points(P[C[0]], P[C[1]], P[C[2]])).radius ** 2
     if len(C) == 4:
-        return (Circle(*getSphere_4points(P[C[0]], P[C[1]], P[C[2]], P[C[3]])).radius) ** 2
+        return Circle(*getSphere_4points(P[C[0]], P[C[1]], P[C[2]], P[C[3]])).radius ** 2
 
 
 def contains(tup: Tuple, outs: List[Tuple]):
-    '''
+    """
     :param tup: a simplexe
     :param outs: list of simplexes
     :return: if there is a simplexe in outs which is sous-simplexe of tup
-    '''
+    """
     for out in outs:
         if set(out).issubset(set(tup)):
             return True
@@ -240,11 +248,11 @@ def contains(tup: Tuple, outs: List[Tuple]):
 
 
 def show(d: Dict, points: List[Point]):
-    '''
+    """
     show the complexe filtered
     :param d: simplexes and corresponding filtration value
     :param points: points
-    '''
+    """
     d_reverse = defaultdict(list)
     for (k, v) in d.items():
         if v == 0:
@@ -263,7 +271,7 @@ def show(d: Dict, points: List[Point]):
     sfreq = Slider(axfreq, 'Filtration', 0.0, max(dis) + 1, valfmt='% .2f', valinit=0, valstep=0.001)
 
     def update(val):
-        # recalculate the complexe filtered after changing the slider (sfreq)
+        # recalculate the complexe filtered after changing the filtration value (sfreq)
         freq = sfreq.val
         ax.clear()
         for point in points:

@@ -6,7 +6,14 @@ from task1 import SphereMin, CircleMin
 from utils import Point, contains
 
 
-def Cech(P: List[Point], k: int, l: float, dim=2):
+def Cech(P: List[Point], k: int, l: float, dim):
+    """
+    :param P: points
+    :param k: max dim of simplexe
+    :param l: max filtration value
+    :param dim: dimension of the space of points (2 or 3)
+    :return: dict of simplexes and corresponding filtration value
+    """
     result = dict()
     for i in range(min(k + 1, len(P))):
         for tup in list(combinations(range(len(P)), i + 1)):
@@ -27,7 +34,14 @@ def Cech(P: List[Point], k: int, l: float, dim=2):
     return result
 
 
-def CechOptimized(P: List[Point], k: int, l: float, dim=2):
+def CechOptimized(P: List[Point], k: int, l: float, dim: int):
+    """
+    :param P: points
+    :param k: max dim of simplexe
+    :param l: max filtration value
+    :param dim: dimension of the space of points (2 or 3)
+    :return: dict of simplexes and corresponding filtration value
+    """
     out = []
     result = dict()
     for i in range(min(k + 1, len(P))):

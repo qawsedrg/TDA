@@ -4,9 +4,9 @@ import numpy as np
 
 
 def neighbor_vertice(G: np.ndarray, v: int):
-    '''
-
-    '''
+    """
+    retunr neighbors of vertive v
+    """
     result = set()
     result.add(v)
     for i in range(G.shape[1]):
@@ -16,23 +16,23 @@ def neighbor_vertice(G: np.ndarray, v: int):
 
 
 def neighbor_edge(G: np.ndarray, e: Tuple[int]):
-    '''
-
-    '''
+    """
+    return neighbors of edge e
+    """
     return neighbor_vertice(G, e[0]).intersection(neighbor_vertice(G, e[1]))
 
 
 def is_dominated_vertice(G: np.ndarray, e: Tuple[int], v: int):
-    '''
-
-    '''
+    """
+    return True is e is dominated by v
+    """
     return neighbor_edge(G, e).issubset(neighbor_vertice(G, v)) and not (v in e)
 
 
 def is_dominated(G: np.ndarray, e: Tuple[int]):
-    '''
-
-    '''
+    """
+    return True if e is dominated
+    """
     for v in range(G.shape[1]):
         if is_dominated_vertice(G, e, v):
             return True
@@ -40,9 +40,9 @@ def is_dominated(G: np.ndarray, e: Tuple[int]):
 
 
 def exist_domination(G: np.ndarray):
-    '''
-
-    '''
+    """
+    return True is there is an edge dominated in G
+    """
     for i in range(G.shape[0]):
         for j in range(i + 1, G.shape[1]):
             if G[i, j] != 0 and is_dominated(filtered(G, G[i, j]), (i, j)):
@@ -51,18 +51,17 @@ def exist_domination(G: np.ndarray):
 
 
 def filtered(G: np.ndarray, t: int):
-    '''
-
-    '''
+    """
+    return graph where edges that have larger filtration value than t is removed
+    """
     return np.where(G <= t, G, 0)
 
 
 def Optimize(G: np.ndarray):
-    '''
-
-    :param G:
-    :return:
-    '''
+    """
+    :param G: original graph
+    :return: optimized graph
+    """
     while exist_domination(G):
         T = np.unique(np.sort(G.flatten()))[1:]
         for i in range(len(T)):

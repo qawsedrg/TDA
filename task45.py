@@ -2,7 +2,6 @@ from copy import deepcopy
 from itertools import combinations
 from typing import List
 
-import gudhi
 import numpy as np
 from scipy.spatial import Delaunay
 
@@ -10,6 +9,9 @@ from utils import Point, Circle, get_filtration_2d, getSphere_3points, get_filtr
 
 
 def Alpha_2d(P: List[Point]):
+    """
+        return simplexes of the corresponding alpha complexe
+    """
     fil = dict()
     tri = Delaunay(np.array([[p.x, p.y] for p in P]))
     S = [deepcopy(set()) for i in range(len(tri.simplices[0]))]
@@ -37,6 +39,9 @@ def Alpha_2d(P: List[Point]):
 
 
 def Alpha_3d(P: List[Point]):
+    """
+    return simplexes of the corresponding alpha complexe
+    """
     fil = dict()
     tri = Delaunay(np.array([[p.x, p.y, p.z] for p in points]))
     S = [deepcopy(set()) for i in range(len(tri.simplices[0]))]
@@ -71,12 +76,24 @@ def Alpha_3d(P: List[Point]):
     return fil
 
 
+def Alpha(P: List[Point], k: int, l: float, dim: int):
+    """
+    :param P: points
+    :param k: max dim of simplexe
+    :param l: max filtration value
+    :param dim: dimension of the space of points (2 or 3)
+    :return: dict of simplexes and corresponding filtration value
+    """
+    fil = Alpha_2d(P) if dim == 2 else Alpha_3d(P)
+    d = dict()
+    for (key, value) in fil.items():
+        if len(key) <= k + 1 and value <= l:
+            d[key] = value
+    return d
+
+
 if __name__ == "__main__":
     points = [Point(1, 1), Point(7, 0), Point(4, 6), Point(9, 6), Point(0, 14), Point(2, 19), Point(9, 17)]
-    d = Alpha_2d(points)
-    alpha_complex = gudhi.AlphaComplex(points=[[p.x, p.y] for p in points])
-    simplex_tree = alpha_complex.create_simplex_tree()
-    for filtered_value in simplex_tree.get_filtration():
-        print('%s -> %.2f' % tuple(filtered_value), end=" ")
-        print("%.2f" % (
-            d.get(tuple(sorted([points.index(Point(*alpha_complex.get_point(i))) for i in filtered_value[0]])), 0)))
+    d = Alpha(points, 1, 10, 2)
+    for (k, v) in d.items():
+        print("{:}->[{:.5f}]".format(k, v))
