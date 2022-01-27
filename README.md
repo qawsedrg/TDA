@@ -43,8 +43,9 @@ show(Cech(points, k, l, dim))
 
 ## Graph Optimization
 
-Ce programme peut optimizer un graphe et écrire le graphe optimisé et le graph original dans un fichier pour que l'on
-puisse tester directement sur Ripser.
+Ce programme peut optimiser un graphe et écrire le graphe optimisé ainsi que le graph original dans un fichier pour que
+l'on puisse tester directement sur [Ripser](https://geometrica.saclay.inria.fr/team/Marc.Glisse/tmp/ripser/) (Il faut
+choisir "sparse graph").
 
 Il faut d'abord définir le graphe. Trois exemples sont inclus. Il est aussi possible de charger un graph qui est dans un
 fichier.
