@@ -50,14 +50,15 @@ def CechOptimized(P: List[Point], k: int, l: float, dim: int):
                 print("({:})->[{:}]".format(tup[0], 0))
                 result[tup] = 0
             else:
+                print(tup, end="")
+                if contains(tup, out):
+                    print("->[out]")
+                    continue
                 if dim == 2:
                     c = CircleMin(deepcopy([P[i] for i in tup]), [])
                 if dim == 3:
                     c = SphereMin(deepcopy([P[i] for i in tup]), [])
-                print(tup, end="")
-                if contains(tup, out):
-                    print("->[out]")
-                elif c.radius > l:
+                if c.radius > l:
                     out.append(tup)
                     print("->[out]")
                 else:
