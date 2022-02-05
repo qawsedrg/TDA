@@ -94,6 +94,9 @@ def Alpha(P: List[Point], k: int, l: float, dim: int):
 
 if __name__ == "__main__":
     points = [Point(1, 1), Point(7, 0), Point(4, 6), Point(9, 6), Point(0, 14), Point(2, 19), Point(9, 17)]
-    d = Alpha(points, 1, 10, 2)
+    d = Alpha(points, 2, 10, 2)
     for (k, v) in d.items():
-        print("{:}->[{:.5f}]".format(k, v))
+        if v == 0:
+            print("{:}->[out]".format(k))
+        else:
+            print("{:}->[{:.5f}]".format(k, v))
